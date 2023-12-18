@@ -40,10 +40,10 @@ import org.jumble_juggler.exceptions.JumbleJugglerException;
  */
 public class FloatJuggler {
   private static final int[] NEGATIVE_POSITIVE_ONES = {-1, 1};
-  private static final String BAD_NEGATIVE = "The value given is %s, but it must be positive.";
-  private static final String BAD_POSITIVE = "The value given is %s, but it must be negative.";
-  private static final String BAD_BOUND =
-      "The minimum value given is %s, but it must be smaller than the maximum value given which is %s.";
+  private static final String BAD_NEGATIVE =
+      "The value given is %s, but it must be strictly positive.";
+  private static final String BAD_POSITIVE =
+      "The value given is %s, but it must be strictly negative.";
 
   private FloatJuggler() {}
 
@@ -85,12 +85,16 @@ public class FloatJuggler {
    * @return A randomly generated float smaller than the specified maximum.
    */
   public static float generateRandomFloatSmallerThan(float max) {
-
-    return max < 0
-        ? ThreadLocalRandom.current().nextFloat(-max, Float.MAX_VALUE) * NEGATIVE_POSITIVE_ONES[0]
-        : ThreadLocalRandom.current().nextFloat(max)
-            * NEGATIVE_POSITIVE_ONES[
-                IntegerJuggler.generateRandomPositiveIntSmallerThan(NEGATIVE_POSITIVE_ONES.length)];
+    if (max == 0) {
+      return generateRandomNegativeFloat();
+    } else {
+      if (max < 0)
+        return ThreadLocalRandom.current().nextFloat(-max, Float.MAX_VALUE)
+            * NEGATIVE_POSITIVE_ONES[0];
+      return ThreadLocalRandom.current().nextFloat(max)
+          * NEGATIVE_POSITIVE_ONES[
+              IntegerJuggler.generateRandomPositiveIntSmallerThan(NEGATIVE_POSITIVE_ONES.length)];
+    }
   }
 
   /**
@@ -100,9 +104,12 @@ public class FloatJuggler {
    * @return A randomly generated float greater than the specified minimum.
    */
   public static float generateRandomFloatGreaterThan(float min) {
-    return min < 0
-        ? ThreadLocalRandom.current().nextFloat(-min, Float.MAX_VALUE) + min
-        : ThreadLocalRandom.current().nextFloat(min, Float.MAX_VALUE);
+    if (min == 0) {
+      return generateRandomPositiveFloat();
+    } else {
+      if (min < 0) return ThreadLocalRandom.current().nextFloat(-min, Float.MAX_VALUE) + min;
+      return ThreadLocalRandom.current().nextFloat(min, Float.MAX_VALUE);
+    }
   }
 
   /**
@@ -114,7 +121,7 @@ public class FloatJuggler {
    */
   public static float generateRandomPositiveFloatSmallerThan(float max)
       throws JumbleJugglerException {
-    if (max < 0) {
+    if (max <= 0) {
       throw new JumbleJugglerException(
           new IllegalArgumentException(String.format(BAD_NEGATIVE, max)), FloatJuggler.class);
     }
@@ -130,7 +137,7 @@ public class FloatJuggler {
    */
   public static float generateRandomPositiveFloatGreaterThan(float min)
       throws JumbleJugglerException {
-    if (min < 0) {
+    if (min <= 0) {
       throw new JumbleJugglerException(
           new IllegalArgumentException(String.format(BAD_NEGATIVE, min)), FloatJuggler.class);
     }
@@ -146,7 +153,7 @@ public class FloatJuggler {
    */
   public static float generateRandomNegativeFloatSmallerThan(float max)
       throws JumbleJugglerException {
-    if (max > 0) {
+    if (max >= 0) {
       throw new JumbleJugglerException(
           new IllegalArgumentException(String.format(BAD_POSITIVE, max)), FloatJuggler.class);
     }
@@ -167,31 +174,5 @@ public class FloatJuggler {
           new IllegalArgumentException(String.format(BAD_POSITIVE, min)), FloatJuggler.class);
     }
     return ThreadLocalRandom.current().nextFloat(0.0F, -min) * NEGATIVE_POSITIVE_ONES[0];
-  }
-
-  /**
-   * Generates a random float between a specified minimum (included) and maximum value (included).
-   *
-   * @param min The inclusive lower bound for the generated float.
-   * @param max The exclusive upper bound for the generated float.
-   * @return A randomly generated float within the specified range.
-   * @throws JumbleJugglerException if the minimum value is greater than the maximum value.
-   */
-  public static float generateRandomFloatBetween(float min, float max)
-      throws JumbleJugglerException {
-    if (min > max) {
-      throw new JumbleJugglerException(
-          new IllegalArgumentException(String.format(BAD_BOUND, min, max)), FloatJuggler.class);
-    }
-    return min > 0 && max > 0
-        ? ThreadLocalRandom.current().nextFloat(min, max)
-        : min < 0 && max > 0
-            ? -min < max
-                ? ThreadLocalRandom.current().nextFloat(-min, max) + min
-                : ThreadLocalRandom.current().nextFloat(max, -min) + min
-            : -min < -max
-                ? ThreadLocalRandom.current().nextFloat(-min, -max) * NEGATIVE_POSITIVE_ONES[0]
-                : ThreadLocalRandom.current().nextFloat(-max - Float.MIN_VALUE, -min)
-                    * NEGATIVE_POSITIVE_ONES[0];
   }
 }

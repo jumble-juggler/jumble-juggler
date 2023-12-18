@@ -63,7 +63,8 @@ class FloatJugglerTest {
             JumbleJugglerException.class,
             () -> FloatJuggler.generateRandomPositiveFloatGreaterThan(random));
     assertEquals(
-        "The value given is " + random + ", but it must be positive.", exception.getMessage());
+        "The value given is " + random + ", but it must be strictly positive.",
+        exception.getMessage());
   }
 
   @Test
@@ -84,7 +85,8 @@ class FloatJugglerTest {
             JumbleJugglerException.class,
             () -> FloatJuggler.generateRandomPositiveFloatSmallerThan(random));
     assertEquals(
-        "The value given is " + random + ", but it must be positive.", exception.getMessage());
+        "The value given is " + random + ", but it must be strictly positive.",
+        exception.getMessage());
   }
 
   @Test
@@ -103,7 +105,8 @@ class FloatJugglerTest {
             JumbleJugglerException.class,
             () -> FloatJuggler.generateRandomNegativeFloatGreaterThan(random));
     assertEquals(
-        "The value given is " + random + ", but it must be negative.", exception.getMessage());
+        "The value given is " + random + ", but it must be strictly negative.",
+        exception.getMessage());
   }
 
   @Test
@@ -124,35 +127,7 @@ class FloatJugglerTest {
             JumbleJugglerException.class,
             () -> FloatJuggler.generateRandomNegativeFloatSmallerThan(random));
     assertEquals(
-        "The value given is " + random + ", but it must be negative.", exception.getMessage());
-  }
-
-  @Test
-  void testGenerateRandomFloatBetween_WhenMinGreaterThanMax_ThrowException() {
-    float random = ThreadLocalRandom.current().nextFloat();
-    float min = FloatJuggler.generateRandomFloatSmallerThan(random);
-    float max = FloatJuggler.generateRandomFloatGreaterThan(random);
-
-    float result = assertDoesNotThrow(() -> FloatJuggler.generateRandomFloatBetween(min, max));
-    assertTrue(result >= min && result < max);
-  }
-
-  @Test
-  void testGenerateRandomFloatBetween() {
-    float random = ThreadLocalRandom.current().nextFloat();
-    float min = FloatJuggler.generateRandomFloatGreaterThan(random);
-    float max = FloatJuggler.generateRandomFloatSmallerThan(random);
-
-    JumbleJugglerException exception =
-        assertThrows(
-            JumbleJugglerException.class, () -> FloatJuggler.generateRandomFloatBetween(min, max));
-    assertEquals(
-        "The minimum value given is "
-            + min
-            + ", but it must be smaller than "
-            + "the maximum value given which is "
-            + max
-            + ".",
+        "The value given is " + random + ", but it must be strictly negative.",
         exception.getMessage());
   }
 }

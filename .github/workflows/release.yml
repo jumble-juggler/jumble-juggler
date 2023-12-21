@@ -14,21 +14,21 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+          server-id: ossrh
+          settings-path: ${{ github.workspace }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_PASSWORD }}
 
-      - name: Set up GPG
-        uses: crazy-max/setup-github-action@v2
-        with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          set_gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          set_gpg_public_key: ${{ secrets.GPG_PUBLIC_KEY }}
-
-      - name: Configure Maven settings
-        run: |
-          echo "MAVEN_USERNAME=${{ secrets.MAVEN_USERNAME }}" >> $GITHUB_ENV 
-          && echo "MAVEN_PASSWORD=${{ secrets.MAVEN_PASSWORD }}" >> $GITHUB_ENV
+      - name: Verify package
+        run: mvn clean verify
 
       - name: Publish package
-        run: mvn clean deploy
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+        run: mvn clean deploy -P release -DskipTests
+
+      - name: Commit and push release
+        run: |
+          git add pom.xml target/*.jar
+          git commit -m "Release ${VERSION}"
+          git push

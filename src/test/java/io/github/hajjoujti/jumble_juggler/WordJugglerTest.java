@@ -3,11 +3,12 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class WordJugglerTest {
@@ -21,7 +22,8 @@ class WordJugglerTest {
   @Test
   void getRandomDictionaryWordStartingWithCharacter() {
     String word =
-        assertDoesNotThrow(() -> WordJuggler.getRandomDictionaryWordStartingWithCharacter('a'));
+        Assertions.assertDoesNotThrow(
+            () -> WordJuggler.getRandomDictionaryWordStartingWithCharacter('a'));
     assertFalse(word.isEmpty());
     assertTrue(word.startsWith("A"));
   }
@@ -40,7 +42,8 @@ class WordJugglerTest {
   @Test
   void getRandomDictionaryWordStartingWithString() {
     String word =
-        assertDoesNotThrow(() -> WordJuggler.getRandomDictionaryWordStartingWithString("Na"));
+        Assertions.assertDoesNotThrow(
+            () -> WordJuggler.getRandomDictionaryWordStartingWithString("Na"));
     assertFalse(word.isEmpty());
     assertTrue(word.startsWith("NA"));
   }

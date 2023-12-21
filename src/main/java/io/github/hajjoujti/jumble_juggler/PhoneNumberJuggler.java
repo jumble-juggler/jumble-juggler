@@ -3,13 +3,13 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import io.github.hajjoujti.jumble_juggler.constants.Country;
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 import java.util.logging.Logger;
-import org.jumble_juggler.constants.Country;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
 
 /**
  * Utility class for randomizing and formatting phone numbers.

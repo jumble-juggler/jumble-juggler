@@ -3,7 +3,7 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler.exceptions;
+package io.github.hajjoujti.jumble_juggler.exceptions;
 
 import java.util.logging.Logger;
 

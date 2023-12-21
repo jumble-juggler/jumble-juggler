@@ -3,10 +3,10 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
-import org.jumble_juggler.constants.Country;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.constants.Country;
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 
 /**
  * Utility class for randomizing and retrieving information about countries.
@@ -60,8 +60,8 @@ public class CountryJuggler {
    * @throws JumbleJugglerException if an error occurs during the randomization process.
    */
   public static Country getRandomCountry() throws JumbleJugglerException {
-    return Country.COUNTRIES.get(
-        IntegerJuggler.generateRandomPositiveIntSmallerThan(Country.COUNTRIES.size()));
+    return Country.getCountries()
+        .get(IntegerJuggler.generateRandomPositiveIntSmallerThan(Country.getCountries().size()));
   }
 
   /**
@@ -78,7 +78,7 @@ public class CountryJuggler {
           new IllegalArgumentException(ISO2_REGEX_ERROR), CountryJuggler.class);
     }
 
-    Country country = Country.ISO2_COUNTRY_MAP.get(iso2Code.toUpperCase());
+    Country country = Country.getIso2CountryMap().get(iso2Code.toUpperCase());
     if (country == null) {
       throw new JumbleJugglerException(COUNTRY_DOES_NOT_EXIST, CountryJuggler.class);
     }
@@ -99,7 +99,7 @@ public class CountryJuggler {
           new IllegalArgumentException(ISO3_REGEX_ERROR), CountryJuggler.class);
     }
 
-    Country country = Country.ISO3_COUNTRY_MAP.get(iso3Code.toUpperCase());
+    Country country = Country.getIso3CountryMap().get(iso3Code.toUpperCase());
     if (country == null) {
       throw new JumbleJugglerException(COUNTRY_DOES_NOT_EXIST, CountryJuggler.class);
     }

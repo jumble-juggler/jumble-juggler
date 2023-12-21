@@ -3,10 +3,10 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 import java.util.concurrent.ThreadLocalRandom;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
 
 /**
  * Utility class for generating random integers with various constraints.
@@ -176,7 +176,7 @@ public class IntegerJuggler {
    * @return A randomly generated positive integer with the specified length.
    */
   public static int generateRandomPositiveIntWithLength(int length) {
-    return ThreadLocalRandom.current().nextInt((9 * (int) Math.pow(10, length - 1)) - 1)
-        + (int) Math.pow(10, length - 1);
+    return ThreadLocalRandom.current().nextInt((9 * (int) Math.pow(10, length - 1d)) - 1)
+        + (int) Math.pow(10, length - 1d);
   }
 }

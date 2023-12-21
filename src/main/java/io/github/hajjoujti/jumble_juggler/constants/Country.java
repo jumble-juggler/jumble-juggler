@@ -3,7 +3,7 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler.constants;
+package io.github.hajjoujti.jumble_juggler.constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -282,9 +282,9 @@ public enum Country {
   private final String capital;
   private final String continent;
   private final boolean isInGoogleLibPhoneNumber; // For testing only
-  public static final List<Country> COUNTRIES = new ArrayList<>();
-  public static final Map<String, Country> ISO2_COUNTRY_MAP = new HashMap<>();
-  public static final Map<String, Country> ISO3_COUNTRY_MAP = new HashMap<>();
+  private static final List<Country> COUNTRIES = new ArrayList<>();
+  private static final Map<String, Country> ISO2_COUNTRY_MAP = new HashMap<>();
+  private static final Map<String, Country> ISO3_COUNTRY_MAP = new HashMap<>();
 
   static {
     COUNTRIES.addAll(Arrays.asList(values()));
@@ -373,5 +373,17 @@ public enum Country {
    */
   public boolean isInGoogleLibPhoneNumber() {
     return isInGoogleLibPhoneNumber;
+  }
+
+  public static List<Country> getCountries() {
+    return COUNTRIES;
+  }
+
+  public static Map<String, Country> getIso2CountryMap() {
+    return ISO2_COUNTRY_MAP;
+  }
+
+  public static Map<String, Country> getIso3CountryMap() {
+    return ISO3_COUNTRY_MAP;
   }
 }

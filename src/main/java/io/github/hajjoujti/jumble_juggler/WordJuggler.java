@@ -3,12 +3,12 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.utils.WordsUtil;
 import java.util.List;
 import java.util.Map;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
-import org.jumble_juggler.utils.WordsUtil;
 
 /**
  * Utility class for randomizing English words.
@@ -48,6 +48,8 @@ public class WordJuggler {
   private static final List<String> words = WordsUtil.getInstance().getWords();
   private static final Map<Character, List<String>> wordsAlphabeticallyMap =
       WordsUtil.getInstance().getWordsSortedMap();
+
+  private WordJuggler() {}
 
   /**
    * Generates and returns a random English word from the dictionary.

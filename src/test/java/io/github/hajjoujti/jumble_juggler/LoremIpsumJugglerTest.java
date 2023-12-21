@@ -3,11 +3,12 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class LoremIpsumJugglerTest {
@@ -25,7 +26,8 @@ class LoremIpsumJugglerTest {
 
   @Test
   void generateRandomSentenceOfWords() {
-    String result = assertDoesNotThrow(() -> LoremIpsumJuggler.generateRandomSentenceOfWords(15));
+    String result =
+        Assertions.assertDoesNotThrow(() -> LoremIpsumJuggler.generateRandomSentenceOfWords(15));
     assertEquals(15, result.split(" ").length);
   }
 
@@ -34,7 +36,7 @@ class LoremIpsumJugglerTest {
     int minWords = 20;
     int maxWords = 40;
     String result =
-        assertDoesNotThrow(
+        Assertions.assertDoesNotThrow(
             () -> LoremIpsumJuggler.generateRandomSentenceOfWordsBetween(minWords, maxWords));
     assertTrue(result.split(" ").length >= minWords);
     assertTrue(result.split(" ").length <= maxWords);
@@ -51,7 +53,7 @@ class LoremIpsumJugglerTest {
   void generateRandomParagraphWithSentences() {
     int sentencesNumber = 20;
     String result =
-        assertDoesNotThrow(
+        Assertions.assertDoesNotThrow(
             () -> LoremIpsumJuggler.generateRandomParagraphWithSentences(sentencesNumber));
     assertTrue(result.split(" ").length >= sentencesNumber * MIN_WORDS);
     assertTrue(result.split(" ").length <= sentencesNumber * MAX_WORDS);
@@ -62,7 +64,7 @@ class LoremIpsumJugglerTest {
     int minSentences = 20;
     int maxSentences = 25;
     String result =
-        assertDoesNotThrow(
+        Assertions.assertDoesNotThrow(
             () ->
                 LoremIpsumJuggler.generateRandomParagraphWithSentencesBetween(
                     minSentences, maxSentences));
@@ -76,7 +78,7 @@ class LoremIpsumJugglerTest {
     int maxWords = 25;
     int sentencesNumber = 10;
     String result =
-        assertDoesNotThrow(
+        Assertions.assertDoesNotThrow(
             () ->
                 LoremIpsumJuggler.generateRandomParagraphWithSentencesOfWordsBetween(
                     sentencesNumber, minWords, maxWords));
@@ -91,7 +93,7 @@ class LoremIpsumJugglerTest {
     int minSentences = 12;
     int maxSentences = 64;
     String result =
-        assertDoesNotThrow(
+        Assertions.assertDoesNotThrow(
             () ->
                 LoremIpsumJuggler.generateRandomParagraphWithSentencesBetweenMadeOfWordsBetween(
                     minSentences, maxSentences, minWords, maxWords));
@@ -102,7 +104,7 @@ class LoremIpsumJugglerTest {
   @Test
   void generateRandomParagraphWithSentencesOfWords() {
     String result =
-        assertDoesNotThrow(
+        Assertions.assertDoesNotThrow(
             () -> LoremIpsumJuggler.generateRandomParagraphWithSentencesOfWords(7, 16));
     assertEquals(7 * 16, result.split(" ").length);
   }

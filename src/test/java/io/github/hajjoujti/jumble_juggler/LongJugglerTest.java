@@ -3,15 +3,15 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 import java.util.concurrent.ThreadLocalRandom;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class LongJugglerTest {
 
   @Test
   void testGenerateRandomPositiveLong() {
-    long result = Assertions.assertDoesNotThrow(LongJuggler::generateRandomPositiveLong);
+    long result = assertDoesNotThrow(LongJuggler::generateRandomPositiveLong);
     assertTrue(result >= 0L);
   }
 
@@ -33,7 +33,8 @@ class LongJugglerTest {
   void testGenerateRandomLongSmallerThan() {
     long random = ThreadLocalRandom.current().nextLong();
 
-    long result = assertDoesNotThrow(() -> LongJuggler.generateRandomLongSmallerThan(random));
+    long result =
+        Assertions.assertDoesNotThrow(() -> LongJuggler.generateRandomLongSmallerThan(random));
     assertTrue(result < random);
   }
 
@@ -41,7 +42,8 @@ class LongJugglerTest {
   void testGenerateRandomLongGreaterThan() {
     long random = ThreadLocalRandom.current().nextLong();
 
-    long result = assertDoesNotThrow(() -> LongJuggler.generateRandomLongGreaterThan(random));
+    long result =
+        Assertions.assertDoesNotThrow(() -> LongJuggler.generateRandomLongGreaterThan(random));
     assertTrue(result >= random);
   }
 
@@ -50,7 +52,8 @@ class LongJugglerTest {
     long random = LongJuggler.generateRandomPositiveLong();
 
     long result =
-        assertDoesNotThrow(() -> LongJuggler.generateRandomPositiveLongGreaterThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> LongJuggler.generateRandomPositiveLongGreaterThan(random));
     assertTrue(result >= 0L && result >= random);
   }
 
@@ -71,7 +74,8 @@ class LongJugglerTest {
     long random = LongJuggler.generateRandomPositiveLong();
 
     long result =
-        assertDoesNotThrow(() -> LongJuggler.generateRandomPositiveLongSmallerThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> LongJuggler.generateRandomPositiveLongSmallerThan(random));
     assertTrue(result >= 0L && result < random);
   }
 
@@ -92,7 +96,8 @@ class LongJugglerTest {
     long random = LongJuggler.generateRandomNegativeLong();
 
     long result =
-        assertDoesNotThrow(() -> LongJuggler.generateRandomNegativeLongGreaterThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> LongJuggler.generateRandomNegativeLongGreaterThan(random));
     assertTrue(result < 0L && result >= random);
   }
 
@@ -113,7 +118,8 @@ class LongJugglerTest {
     long random = LongJuggler.generateRandomNegativeLong();
 
     long result =
-        assertDoesNotThrow(() -> LongJuggler.generateRandomNegativeLongSmallerThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> LongJuggler.generateRandomNegativeLongSmallerThan(random));
     assertTrue(result < 0L && result < random);
   }
 
@@ -135,7 +141,8 @@ class LongJugglerTest {
     long min = LongJuggler.generateRandomLongSmallerThan(random);
     long max = LongJuggler.generateRandomLongGreaterThan(random);
 
-    long result = assertDoesNotThrow(() -> LongJuggler.generateRandomLongBetween(min, max));
+    long result =
+        Assertions.assertDoesNotThrow(() -> LongJuggler.generateRandomLongBetween(min, max));
     assertTrue(result >= min && result < max);
   }
 
@@ -163,7 +170,8 @@ class LongJugglerTest {
     long length = 5L;
 
     long result =
-        assertDoesNotThrow(() -> LongJuggler.generateRandomPositiveLongWithLength(length));
+        Assertions.assertDoesNotThrow(
+            () -> LongJuggler.generateRandomPositiveLongWithLength(length));
     assertEquals(5, String.valueOf(result).length());
   }
 }

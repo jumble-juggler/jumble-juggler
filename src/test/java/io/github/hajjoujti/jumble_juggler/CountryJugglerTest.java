@@ -3,19 +3,21 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.jumble_juggler.constants.Country;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.constants.Country;
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CountryJugglerTest {
 
   @Test
   void getCountryByIso2Code() {
-    Country country = assertDoesNotThrow(() -> CountryJuggler.getCountryByIso2Code("BE"));
+    Country country =
+        Assertions.assertDoesNotThrow(() -> CountryJuggler.getCountryByIso2Code("BE"));
     assertEquals(Country.BE, country);
   }
 
@@ -40,7 +42,8 @@ class CountryJugglerTest {
 
   @Test
   void getCountryByIso3Code() {
-    Country country = assertDoesNotThrow(() -> CountryJuggler.getCountryByIso3Code("LBN"));
+    Country country =
+        Assertions.assertDoesNotThrow(() -> CountryJuggler.getCountryByIso3Code("LBN"));
     assertEquals(Country.LB, country);
     assertEquals("Lebanon", country.getCountryName());
     assertEquals("🇱🇧", country.getUnicode());

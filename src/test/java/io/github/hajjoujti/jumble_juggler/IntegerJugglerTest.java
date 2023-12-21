@@ -3,15 +3,15 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 import java.util.concurrent.ThreadLocalRandom;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class IntegerJugglerTest {
 
   @Test
   void testGenerateRandomPositiveInt() {
-    int result = Assertions.assertDoesNotThrow(IntegerJuggler::generateRandomPositiveInt);
+    int result = assertDoesNotThrow(IntegerJuggler::generateRandomPositiveInt);
     assertTrue(result >= 0);
   }
 
@@ -33,7 +33,8 @@ class IntegerJugglerTest {
   void testGenerateRandomIntSmallerThan() {
     int random = ThreadLocalRandom.current().nextInt();
 
-    int result = assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntSmallerThan(random));
+    int result =
+        Assertions.assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntSmallerThan(random));
     assertTrue(result < random);
   }
 
@@ -41,7 +42,8 @@ class IntegerJugglerTest {
   void testGenerateRandomIntGreaterThan() {
     int random = ThreadLocalRandom.current().nextInt();
 
-    int result = assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntGreaterThan(random));
+    int result =
+        Assertions.assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntGreaterThan(random));
     assertTrue(result >= random);
   }
 
@@ -50,7 +52,8 @@ class IntegerJugglerTest {
     int random = IntegerJuggler.generateRandomPositiveInt();
 
     int result =
-        assertDoesNotThrow(() -> IntegerJuggler.generateRandomPositiveIntGreaterThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> IntegerJuggler.generateRandomPositiveIntGreaterThan(random));
     assertTrue(result >= 0 && result >= random);
   }
 
@@ -71,7 +74,8 @@ class IntegerJugglerTest {
     int random = IntegerJuggler.generateRandomPositiveInt();
 
     int result =
-        assertDoesNotThrow(() -> IntegerJuggler.generateRandomPositiveIntSmallerThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> IntegerJuggler.generateRandomPositiveIntSmallerThan(random));
     assertTrue(result >= 0 && result < random);
   }
 
@@ -91,7 +95,8 @@ class IntegerJugglerTest {
   void testGenerateRandomNegativeIntGreaterThan() {
     int random = IntegerJuggler.generateRandomNegativeInt();
     int result =
-        assertDoesNotThrow(() -> IntegerJuggler.generateRandomNegativeIntGreaterThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> IntegerJuggler.generateRandomNegativeIntGreaterThan(random));
     assertTrue(result < 0 && result >= random);
   }
 
@@ -111,7 +116,8 @@ class IntegerJugglerTest {
     int random = IntegerJuggler.generateRandomNegativeInt();
 
     int result =
-        assertDoesNotThrow(() -> IntegerJuggler.generateRandomNegativeIntSmallerThan(random));
+        Assertions.assertDoesNotThrow(
+            () -> IntegerJuggler.generateRandomNegativeIntSmallerThan(random));
     assertTrue(result < 0 && result < random);
   }
 
@@ -133,7 +139,8 @@ class IntegerJugglerTest {
     int min = IntegerJuggler.generateRandomIntSmallerThan(random);
     int max = IntegerJuggler.generateRandomIntGreaterThan(random);
 
-    int result = assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntBetween(min, max));
+    int result =
+        Assertions.assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntBetween(min, max));
     assertTrue(result >= min && result < max);
   }
 
@@ -161,7 +168,8 @@ class IntegerJugglerTest {
     int length = 7;
 
     int result =
-        assertDoesNotThrow(() -> IntegerJuggler.generateRandomPositiveIntWithLength(length));
+        Assertions.assertDoesNotThrow(
+            () -> IntegerJuggler.generateRandomPositiveIntWithLength(length));
     assertEquals(7, String.valueOf(result).length());
   }
 }

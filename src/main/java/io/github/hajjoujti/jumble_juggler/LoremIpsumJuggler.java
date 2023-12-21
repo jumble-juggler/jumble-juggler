@@ -3,14 +3,14 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.utils.LoremIpsumUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
-import org.jumble_juggler.utils.LoremIpsumUtil;
 
 /**
  * Utility class for generating random Lorem Ipsum text.
@@ -65,6 +65,8 @@ public class LoremIpsumJuggler {
   private static final int MAX_WORDS = 20;
   private static final int MIN_SENTENCES = 3;
   private static final int MAX_SENTENCES = 5;
+
+  private LoremIpsumJuggler() {}
 
   /**
    * Method used to generate one Lorem Ipsum sentence containing a number of words between {@link

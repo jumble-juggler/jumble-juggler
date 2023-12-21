@@ -3,13 +3,13 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import org.jumble_juggler.constants.Country;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
+import io.github.hajjoujti.jumble_juggler.constants.Country;
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 import org.junit.jupiter.api.Test;
 
 class PhoneNumberJugglerTest {

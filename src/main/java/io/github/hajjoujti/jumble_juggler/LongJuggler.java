@@ -3,10 +3,10 @@
 * Copyright (C)2023. All rights reserved.
 * This code is licensed under the MIT License.
 */
-package org.jumble_juggler;
+package io.github.hajjoujti.jumble_juggler;
 
+import io.github.hajjoujti.jumble_juggler.exceptions.JumbleJugglerException;
 import java.util.concurrent.ThreadLocalRandom;
-import org.jumble_juggler.exceptions.JumbleJugglerException;
 
 /**
  * Utility class for generating random longs with various constraints.
@@ -177,7 +177,7 @@ public class LongJuggler {
    * @return A randomly generated positive long with the specified length.
    */
   public static long generateRandomPositiveLongWithLength(long length) {
-    return ThreadLocalRandom.current().nextLong((9L * (long) Math.pow(10L, length - 1L)) - 1L)
-        + (long) Math.pow(10L, length - 1L);
+    return ThreadLocalRandom.current().nextLong((9L * (long) Math.pow(10L, length - 1d)) - 1L)
+        + (long) Math.pow(10L, length - 1d);
   }
 }

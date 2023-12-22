@@ -14,23 +14,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          settings-path: ${{ github.workspace }}
-          server-id: ossrh
-          gpg-key: ${{ secrets.GPG_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          gpg-public-key: ${{ secrets.GPG_PUBLIC_KEY }}
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_PASSWORD }}
-
-      - name: Verify package
-        run: mvn clean verify
-
-      - name: Publish package
-        run: mvn clean deploy -P release -DskipTests -X
-
-      - name: Commit and push release
+          
+      - id: install-secret-key
+        name: Install gpg secret key
         run: |
-          git add pom.xml target/*.jar
-          git commit -m "Release ${VERSION}"
-          git push
+          # Install gpg secret key
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          # Verify gpg secret key
+          gpg --list-secret-keys --keyid-format LONG

@@ -14,15 +14,20 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          server-id: ossrh
           settings-path: ${{ github.workspace }}
+          server-id: ossrh
+          gpg-key: ${{ secrets.GPG_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-public-key: ${{ secrets.GPG_PUBLIC_KEY }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_PASSWORD }}
 
       - name: Verify package
         run: mvn clean verify
 
       - name: Publish package
-        run: mvn clean deploy -P release -DskipTests --settings .github/workflows/settings.xml
+        run: mvn clean deploy -P release -DskipTests
 
       - name: Commit and push release
         run: |

@@ -9,6 +9,8 @@
 
     <name>JumbleJuggler</name>
 
+    <description>Java library that simplifies the generation of random data for testing and development purposes.</description>
+
     <url>https://github.com/hajjoujti/JumbleJuggler</url>
 
     <licenses>

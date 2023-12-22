@@ -97,7 +97,6 @@
 							<includes>
 								<include>.gitattributes</include>
 								<include>.gitignore</include>
-								<include>pom.xml</include>
 							</includes>
 							<trimTrailingWhitespace />
 							<endWithNewline />
@@ -107,6 +106,12 @@
 							</indent>
 						</format>
 					</formats>
+					<pom>
+                        			<sortPom>
+                            				<expandEmptyElements>false</expandEmptyElements>
+                            				<nrOfIndentSpace>4</nrOfIndentSpace>
+                        			</sortPom>
+                    			</pom>
 					<java>
 						<googleJavaFormat>
 							<version>1.18.1</version>

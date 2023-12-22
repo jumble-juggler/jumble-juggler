@@ -23,10 +23,6 @@ jobs:
           # Verify gpg secret key
           gpg --list-secret-keys --keyid-format LONG
           
-      - id: verify-package
-        name: Verify package
-        run: mvn clean verify
-        
       - id: publish-to-central
         name: Publish to Central Repository
         env:

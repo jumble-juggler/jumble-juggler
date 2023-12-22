@@ -33,7 +33,7 @@ jobs:
           mvn \
             --no-transfer-progress \
             --batch-mode \
-            deploy -P release -DskipTests -X
+            -s .github/workflows/settings.xml deploy -P release -s  -DskipTests -X
             
       - id: apply-spotless
         name: Apply spotless after publish

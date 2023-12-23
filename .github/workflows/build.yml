@@ -2,6 +2,8 @@ name: Build and Test and Increment Version
 
 on:
   push:
+    branches:
+      - '**'
   pull_request:
     branches:
       - master

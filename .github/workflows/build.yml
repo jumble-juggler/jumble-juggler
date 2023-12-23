@@ -1,22 +1,13 @@
-name: Build and Test and Increment Version
+name: Build and Test
 
 on:
   push:
     branches:
-      - '**'
-  pull_request:
-    branches:
       - master
-    types:
-      - closed
-      - labeled
-      - unlabeled
-      - opened
-      - reopened
-      - synchronize
 
 jobs:
-  build-test-increment-version:
+  build-test:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - id: checkout-code
@@ -40,52 +31,20 @@ jobs:
         name: Build with Maven
         run: mvn clean install
 
-      - id: get-pr-labels
-        name: Get the Pull Request Labels
-        if: github.event_name == 'pull_request' && success()
-        run: |
-          # Extract the labels from the pull request
-          LABELS=$(echo '${{ toJson(github.event.pull_request.labels.*.name) }}')
-          
-          # Check the labels if they contain the required 
-          COUNT=0
-          if [[ $LABELS == *"major"* ]]; then
-            ((COUNT++))
-          fi
-          if [[ $LABELS == *"minor"* ]]; then
-            ((COUNT++))
-          fi
-          if [[ $LABELS == *"patch"* ]]; then
-            ((COUNT++))
-          fi
-          
-          if [[ $COUNT -eq 0 ]]; then
-            echo "Error: PR must have a 'major', 'minor', or 'patch' label"
-            exit 1
-          elif [[ $COUNT -gt 1 ]]; then
-            echo "Error: PR must not have more than one 'major', 'minor', or 'patch' label"
-            exit 1
-          fi
-
       - id: increment-version
         name: Determine Version and Increments it
-        if: github.event.pull_request.merged == true && success()
+        if: success()
         run: |
-          # Determine version increment based on labels
-          if [[ "$LABELS" == *"major"* ]]; then
-            mvn versions:set -DnewVersion=:major
-          elif [[ "LABELS" == *"minor"* ]]; then
+          # get the last commit message
+          commit_message=$(git log -1 --pretty=%B)
+          
+          # Check if the commit message starts with the specified word
+          if [[ $commit_message == "feat: "* ]]; then
             mvn versions:set -DnewVersion=:minor
-          elif [[ "$LABELS" == *"patch"* ]]; then
+          elif [[ $commit_message == "fix: "* ]]; then
             mvn versions:set -DnewVersion=:patch
           else
-            echo "Error: PR must have a 'major', 'minor', or 'patch' label"
-            exit 1
-          fi
-          
-          # Check if Maven command was successful
-          if [ $? -ne 0 ]; then
-            echo "Maven command failed while incrementing version. Exiting."
+            echo "Commit message does not start with either 'feat' or 'fix'"
             exit 1
           fi
 
@@ -105,6 +64,12 @@ jobs:
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"
           git push origin HEAD:master
+
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
 
       - id: create-release-tag
         if: github.event.pull_request.merged == true && success()

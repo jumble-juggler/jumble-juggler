@@ -52,6 +52,6 @@ jobs:
       - id: commit-changes
         name: commit changes after spotless
         run: |
-          git add pom.xml target/*.jar
-          git commit -m "Release ${VERSION}"
+          git add pom.xml
+          git commit -S -m "Release ${VERSION}"
           git push

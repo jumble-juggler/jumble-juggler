@@ -9,6 +9,11 @@ on:
       - master
     types:
       - closed
+      - labeled
+      - unlabeled
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
   build-test-increment-version:

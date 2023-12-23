@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-test:
+  pr-build-test:
     runs-on: ubuntu-latest
     steps:
       - id: checkout-code
@@ -29,3 +29,25 @@ jobs:
         if: success()
         name: Build with Maven
         run: mvn clean install
+
+  pr-merge-validation:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - id: validate-commit-msg
+        name: Validate Commit Message
+        run: |
+          # get the last commit message
+          commit_message=$(git log -1 --pretty=%B)
+          
+          # Check if the commit message starts with the specified word
+          if [[ $commit_message == "feat: "* ]]; then
+            echo "Commit Validated!"
+            exit 0
+          elif [[ $commit_message == "fix: "* ]]; then
+            echo "Commit Validated!"
+            exit 0
+          else
+            echo "Commit message does not start with either 'feat' or 'fix'"
+            exit 1
+          fi

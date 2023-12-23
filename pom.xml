@@ -31,7 +31,6 @@
     <scm>
         <connection>scm:git:git://github.com/hajjoujti/JumbleJuggler.git</connection>
         <developerConnection>scm:git:ssh://github.com:hajjoujti/JumbleJuggler.git</developerConnection>
-        <tag>JumbleJuggler-1.0</tag>
         <url>https://github.com/hajjoujti/JumbleJuggler</url>
     </scm>
 

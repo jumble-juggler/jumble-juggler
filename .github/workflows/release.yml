@@ -50,6 +50,12 @@ jobs:
         name: Apply spotless after publish
         run: mvn spotless:check
 
+      - id: set-up-git-user
+        name: Set up Git user
+        run: |
+          git config --global user.name "H@JJ"
+          git config --global user.email "hajj@hajj.mozmail.com"
+
       - id: commit-changes
         name: commit changes after spotless
         env:

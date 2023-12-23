@@ -64,4 +64,4 @@ jobs:
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git add pom.xml
           git commit -S -m "Release ${VERSION}"
-          git push
+          git push origin HEAD:master

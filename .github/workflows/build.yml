@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test and Increment Version
 
 on:
   push:
@@ -7,23 +7,82 @@ on:
   pull_request:
     branches:
       - master
+    types:
+      - labeled
 
 jobs:
-  build_test:
+  build-test-increment-version:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - id: checkout-code
+        name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK
+      - id: set-up-jdk
+        name: Set up JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Build with Maven
+      - id: mvn-clean-install
+        name: Build with Maven
         run: mvn clean install
 
-      - name: Check if build is successful
+      - id: mvn-verify
+        name: Check if build is successful
         run: mvn verify
+
+      - id: get-pr-labels
+        name: Get the Pull Request Labels
+        if: github.event_name == 'pull_request' && success('mvn-verify')
+        run: |
+          # Extract the labels from the pull request
+          PR_LABELS=$(echo "${{ toJson(github.event.pull_request.labels.*.name) }}")
+
+      - id: increment-version
+        name: Determine Version and Increments it
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && success('get-pr-labels')
+        run: |
+          # Determine version increment based on labels
+          if [[ "$PR_LABELS" == *"major"* ]]; then
+            mvn versions:set -DnewVersion=:major
+          elif [[ "$PR_LABELS" == *"minor"* ]]; then
+            mvn versions:set -DnewVersion=:minor
+          elif [[ "$PR_LABELS" == *"patch"* ]]; then
+            mvn versions:set -DnewVersion=:patch
+          else
+            echo "Error: PR must have a 'major', 'minor', or 'patch' label"
+            exit 1
+          fi
+          
+          # Check if Maven command was successful
+          if [ $? -ne 0 ]; then
+            echo "Maven command failed while incrementing version. Exiting."
+            exit 1
+          fi
+
+      - id: set-up-git-user
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' success('increment-version')
+        name: Set up Git user
+        run: |
+          git config --global user.name "H@JJ"
+          git config --global user.email "hajj@hajj.mozmail.com"
+
+      - id: commit-changes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' success('set-up-git-user')
+        name: commit changes after spotless
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
+          git commit -S -am "Release ${VERSION}"
+          git push origin HEAD:master
+
+      - id: create-release-tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' success('commit-changes')
+        name: Create Release Tag
+        run: |
+          git tag -a \
+          v$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) \
+          -m "Release $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"

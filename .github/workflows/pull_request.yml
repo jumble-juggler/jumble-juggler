@@ -1,4 +1,4 @@
-name: Pull Request Check Labels
+name: Pull Request Build and Test
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  verify-labels:
+  build-test:
     runs-on: ubuntu-latest
     steps:
       - id: checkout-code

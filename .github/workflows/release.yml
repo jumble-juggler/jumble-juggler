@@ -52,6 +52,8 @@ jobs:
 
       - id: commit-changes
         name: commit changes after spotless
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add pom.xml
           git commit -S -m "Release ${VERSION}"

@@ -8,7 +8,7 @@ on:
     branches:
       - master
     types:
-      - labeled
+      - closed
 
 jobs:
   build-test-increment-version:
@@ -40,18 +40,38 @@ jobs:
         if: github.event_name == 'pull_request' && success()
         run: |
           # Extract the labels from the pull request
-          PR_LABELS=$(echo "${{ toJson(github.event.pull_request.labels.*.name) }}")
+          LABELS=$(echo '${{ toJson(github.event.pull_request.labels.*.name) }}')
+          
+          # Check the labels if they contain the required 
+          COUNT=0
+          if [[ $LABELS == *"major"* ]]; then
+            ((COUNT++))
+          fi
+          if [[ $LABELS == *"minor"* ]]; then
+            ((COUNT++))
+          fi
+          if [[ $LABELS == *"patch"* ]]; then
+            ((COUNT++))
+          fi
+          
+          if [[ $COUNT -eq 0 ]]; then
+            echo "Error: PR must have a 'major', 'minor', or 'patch' label"
+            exit 1
+          elif [[ $COUNT -gt 1 ]]; then
+            echo "Error: PR must not have more than one 'major', 'minor', or 'patch' label"
+            exit 1
+          fi
 
       - id: increment-version
         name: Determine Version and Increments it
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && success()
+        if: github.event.pull_request.merged == true && success()
         run: |
           # Determine version increment based on labels
-          if [[ "$PR_LABELS" == *"major"* ]]; then
+          if [[ "$LABELS" == *"major"* ]]; then
             mvn versions:set -DnewVersion=:major
-          elif [[ "$PR_LABELS" == *"minor"* ]]; then
+          elif [[ "LABELS" == *"minor"* ]]; then
             mvn versions:set -DnewVersion=:minor
-          elif [[ "$PR_LABELS" == *"patch"* ]]; then
+          elif [[ "$LABELS" == *"patch"* ]]; then
             mvn versions:set -DnewVersion=:patch
           else
             echo "Error: PR must have a 'major', 'minor', or 'patch' label"
@@ -65,14 +85,14 @@ jobs:
           fi
 
       - id: set-up-git-user
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && success()
+        if: github.event.pull_request.merged == true && success()
         name: Set up Git user
         run: |
           git config --global user.name "H@JJ"
           git config --global user.email "hajj@hajj.mozmail.com"
 
       - id: commit-changes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && success()
+        if: github.event.pull_request.merged == true && success()
         name: commit changes after spotless
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -82,7 +102,7 @@ jobs:
           git push origin HEAD:master
 
       - id: create-release-tag
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && success()
+        if: github.event.pull_request.merged == true && success()
         name: Create Release Tag
         run: |
           git tag -a \

@@ -1,29 +1,80 @@
-name: Build and Test
+name: Build, Test and Create New Version
 
 on:
   push:
     branches:
-      - '*'
-  pull_request:
-    branches:
       - master
 
 jobs:
-  build_test:
+  build-test-invrease-version:
+    permissions: write-all
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - id: checkout-code
+        name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK
+      - id: set-up-jdk
+        name: Set up JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Build with Maven
+      - id: mvn-verify
+        if: success()
+        name: Check if build is successful
+        run: mvn verify
+
+      - id: mvn-clean-install
+        if: success()
+        name: Build with Maven
         run: mvn clean install
 
-      - name: Check if build is successful
-        run: mvn verify
+      - id: increment-version
+        name: Determine Version and Increments it
+        if: success()
+        run: |
+          # get the last commit message
+          commit_message=$(git log -1 --pretty=%B)
+          
+          # Check if the commit message starts with the specified word
+          if [[ $commit_message == "feat: "* ]]; then
+            mvn versions:set -DnewVersion=:minor
+          elif [[ $commit_message == "fix: "* ]]; then
+            mvn versions:set -DnewVersion=:patch
+          else
+            echo "Commit message does not start with either 'feat' or 'fix'"
+            exit 1
+          fi
+
+      - id: set-up-git-user
+        if: github.event.pull_request.merged == true && success()
+        name: Set up Git user
+        run: |
+          git config --global user.name "H@JJ"
+          git config --global user.email "hajj@hajj.mozmail.com"
+
+      - id: commit-changes
+        if: github.event.pull_request.merged == true && success()
+        name: commit changes after spotless
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
+          git commit -S -am "Release ${VERSION}"
+          git push origin HEAD:master
+
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
+
+      - id: create-release-tag
+        if: github.event.pull_request.merged == true && success()
+        name: Create Release Tag
+        run: |
+          git tag -a \
+          v$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) \
+          -m "Release $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"

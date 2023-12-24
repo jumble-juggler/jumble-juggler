@@ -41,28 +41,7 @@ jobs:
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         run: |
-          mvn versions:set -DnewVersion=${{ github.event.release.tag_name }} -DgenerateBackupPoms=false
           mvn \
             --no-transfer-progress \
             --batch-mode \
-            deploy -P release -DskipTests -X
-            
-      - id: apply-spotless
-        name: Apply spotless after publish
-        run: mvn spotless:check
-
-      - id: set-up-git-user
-        name: Set up Git user
-        run: |
-          git config --global user.name "H@JJ"
-          git config --global user.email "hajj@hajj.mozmail.com"
-
-      - id: commit-changes
-        name: commit changes after spotless
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
-          git add pom.xml
-          git commit -S -m "Release ${VERSION}"
-          git push origin HEAD:master
+            deploy -DskipTests -X

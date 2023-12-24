@@ -101,6 +101,8 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         run: |
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
+          git config --global gpg.program gpg
+          git config --global commit.gpgsign true
           git commit -S -am "Release ${VERSION}"
           git push origin HEAD:master
 

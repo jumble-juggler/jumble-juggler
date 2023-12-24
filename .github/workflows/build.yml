@@ -6,8 +6,43 @@ on:
       - master
 
 jobs:
-  build-test-invrease-version:
+  build-test:
     if: github.actor != 'github-actions[bot]'
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout-code
+        name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: set-up-jdk
+        name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: 'maven'
+
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          # Install gpg secret key
+          echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}" | gpg --batch --import
+          # Verify gpg secret key
+          gpg --list-secret-keys --keyid-format LONG
+
+      - id: mvn-verify
+        if: success()
+        name: Check if build is successful
+        run: mvn verify
+
+      - id: mvn-clean-install
+        if: success()
+        name: Build with Maven
+        run: mvn clean install
+
+  increase-version:
+    if: success() && github.actor != 'github-actions[bot]'
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -27,24 +62,6 @@ jobs:
           server-password: OSSRH_TOKEN # env variable for token in deploy
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-
-      - id: install-secret-key
-        name: Install gpg secret key
-        run: |
-          # Install gpg secret key
-          echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}" | gpg --batch --import
-          # Verify gpg secret key
-          gpg --list-secret-keys --keyid-format LONG
-
-      - id: mvn-verify
-        if: success()
-        name: Check if build is successful
-        run: mvn verify
-
-      - id: mvn-clean-install
-        if: success()
-        name: Build with Maven
-        run: mvn clean install
 
       - id: increment-version
         name: Determine Version and Increments it
@@ -76,7 +93,6 @@ jobs:
         name: commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GPG_TTY: $(tty)
         run: |
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"

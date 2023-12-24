@@ -97,6 +97,7 @@ jobs:
           GPG_TTY: $(tty)
         run: |
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
+          git add -A
           git commit -S -am "Release ${VERSION}"
           git push origin HEAD:master
 

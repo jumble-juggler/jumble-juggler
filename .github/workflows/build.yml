@@ -49,15 +49,15 @@ jobs:
           fi
 
       - id: set-up-git-user
-        if: github.event.pull_request.merged == true && success()
+        if: success()
         name: Set up Git user
         run: |
           git config --global user.name "H@JJ"
           git config --global user.email "hajj@hajj.mozmail.com"
 
       - id: commit-changes
-        if: github.event.pull_request.merged == true && success()
-        name: commit changes after spotless
+        if: success()
+        name: commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -72,7 +72,7 @@ jobs:
           path: staging
 
       - id: create-release-tag
-        if: github.event.pull_request.merged == true && success()
+        if: success()
         name: Create Release Tag
         run: |
           git tag -a \

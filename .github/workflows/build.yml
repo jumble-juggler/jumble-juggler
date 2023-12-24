@@ -52,6 +52,7 @@ jobs:
         run: |
           # get the last commit message
           commit_message=$(git log -1 --pretty=%B)
+          echo "Commit message: '$commit_message'"
           
           # Check if the commit message starts with the specified word
           if [[ $commit_message == "feat: "* ]]; then
@@ -59,7 +60,7 @@ jobs:
           elif [[ $commit_message == "fix: "* ]]; then
             mvn versions:set -DnewVersion=:patch
           else
-            echo "Commit message does not start with either 'feat' or 'fix'"
+            echo "Commit message does not start with either 'feat:' or 'fix:'"
             exit 1
           fi
 

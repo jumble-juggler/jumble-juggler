@@ -101,7 +101,7 @@ jobs:
         run: |
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"
-          git push --progress --porcelain origin HEAD:master --force
+          git push --progress --porcelain origin refs/heads/master:master
 
       - id: upload-build-artifact
         name: Upload a Build Artifact
@@ -109,11 +109,3 @@ jobs:
         with:
           name: Package
           path: staging
-
-      - id: create-release-tag
-        if: success()
-        name: Create Release Tag
-        run: |
-          git tag -a \
-          v$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) \
-          -m "Release $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"

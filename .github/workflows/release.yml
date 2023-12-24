@@ -44,4 +44,4 @@ jobs:
           mvn \
             --no-transfer-progress \
             --batch-mode \
-            deploy -P release -DskipTests -X
+            deploy -DskipTests -X

@@ -49,16 +49,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase needed for signing
 
-      - id: install-secret-key
-        name: Install gpg secret key
-        run: |
-          # Install gpg secret key
-          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
-          # Verify gpg secret key
-          gpg --list-secret-keys --keyid-format LONG
+      - id: import-gpg
+        name: Import GPG
+        uses: crazy-max/ghaction-import-gpg@v6.0.0
+        with:
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       - id: increment-version
         name: Determine Version and Increments it
@@ -95,19 +94,15 @@ jobs:
         if: success()
         name: Push Changes
         env:
-          GPG_TTY: $(tty)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         run: |
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
-          git config --global gpg.program gpg2
-          git config --global commit.gpgsign true
           git commit -S -am "Release ${VERSION}"
           git push origin HEAD:master
 
-      - run: mkdir staging && cp target/*.jar staging
-      - uses: actions/upload-artifact@v3
+      - id: upload-build-artifact
+        name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.0.0
         with:
           name: Package
           path: staging

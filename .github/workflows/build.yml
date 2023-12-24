@@ -95,6 +95,7 @@ jobs:
         if: success()
         name: Push Changes
         env:
+          GPD_TTY: $(tty)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}

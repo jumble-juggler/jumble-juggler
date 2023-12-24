@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-test-invrease-version:
+    if: github.actor != 'github-actions[bot]'
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -18,8 +19,19 @@ jobs:
         name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
           java-version: '17'
+          distribution: 'adopt'
+          cache: 'maven'
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+          # Install gpg secret key
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          # Verify gpg secret key
+          gpg --list-secret-keys --keyid-format LONG
 
       - id: mvn-verify
         if: success()

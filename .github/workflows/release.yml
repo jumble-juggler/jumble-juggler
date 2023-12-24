@@ -32,7 +32,7 @@ jobs:
 
       - id: package
         name: Package the library
-        run: mvn clean package
+        run: mvn clean install
 
       - id: publish-to-central
         name: Publish to Central Repository

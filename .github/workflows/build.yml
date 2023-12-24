@@ -34,6 +34,8 @@ jobs:
         run: mvn clean install
 
   increase-version:
+    needs:
+      - build-test
     if: success() && github.actor != 'github-actions[bot]'
     permissions: write-all
     runs-on: ubuntu-latest
@@ -92,6 +94,7 @@ jobs:
         name: commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_TTY: $(tty)
         run: |
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"

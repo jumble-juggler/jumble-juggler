@@ -15,7 +15,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          cache: 'maven'
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: OSSRH_USERNAME # env variable for username in deploy
           server-password: OSSRH_TOKEN # env variable for token in deploy

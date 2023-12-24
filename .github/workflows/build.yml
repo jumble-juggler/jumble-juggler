@@ -93,8 +93,10 @@ jobs:
         name: commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           GPG_TTY: $(tty)
         run: |
+          gpg-agent --daemon
           git config --global gpg.program $(which gpg)
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"

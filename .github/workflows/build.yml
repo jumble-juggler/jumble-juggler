@@ -49,11 +49,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: OSSRH_USERNAME # env variable for username in deploy
-          server-password: OSSRH_TOKEN # env variable for token in deploy
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase needed for signing
 
       - id: install-secret-key
         name: Install gpg secret key
@@ -73,9 +70,15 @@ jobs:
           
           # Check if the commit message starts with the specified word
           if [[ $commit_message == "feat: "* ]]; then
-            mvn versions:set -DnewVersion=:minor
+            mvn build-helper:parse-version \
+            versions:set \
+            -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0 \
+            versions:commit
           elif [[ $commit_message == "fix: "* ]]; then
-            mvn versions:set -DnewVersion=:patch
+            mvn build-helper:parse-version \
+            versions:set \
+            -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} \
+            versions:commit
           else
             echo "Commit message does not start with either 'feat:' or 'fix:'"
             exit 1
@@ -88,16 +91,13 @@ jobs:
           git config --global user.name "H@JJ"
           git config --global user.email "hajj@hajj.mozmail.com"
 
-      - id: commit-changes
+      - id: push-changes
         if: success()
-        name: commit changes
+        name: Push Changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          GPG_TTY: $(tty)
         run: |
-          gpg-agent --daemon
-          git config --global gpg.program $(which gpg)
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"
           git push origin HEAD:master

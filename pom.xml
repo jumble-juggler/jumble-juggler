@@ -4,7 +4,7 @@
 
     <groupId>io.github.hajjoujti.jumble_juggler</groupId>
     <artifactId>JumbleJuggler</artifactId>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
     <packaging>jar</packaging>
 
     <name>JumbleJuggler</name>

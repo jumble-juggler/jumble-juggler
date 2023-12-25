@@ -36,9 +36,9 @@ jobs:
         run: mvn clean install
 
   increase-version:
+    if: github.actor != 'github-actions[bot]' && github.ref == 'refs/heads/master' && github.event_name == 'push'
     needs:
       - build-test-install
-    if: success() && github.actor != 'github-actions[bot]' && github.ref == 'refs/heads/master' && github.event_name == 'push'
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -86,22 +86,23 @@ jobs:
             exit 1
           fi
 
-      - id: set-up-git-user
-        if: success()
-        name: Set up Git user
-        run: |
-          git config --global user.name "H@JJ"
-          git config --global user.email "hajj@hajj.mozmail.com"
+      #- id: set-up-git-user
+        #if: success()
+        #name: Set up Git user
+       # run: |
+         # git config --global user.name "H@JJ"
+          #git config --global user.email "hajj@hajj.mozmail.com"
 
       - id: commit-changes
         if: success()
         name: Commit Changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUSH_TO_PROTECTED_BRANCH }}
         run: |
           git checkout master
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
           git commit -S -am "Release ${VERSION}"
+          git push --progress --porcelain origin refs/heads/master:master
 
       - id: push-changes
         if: success()

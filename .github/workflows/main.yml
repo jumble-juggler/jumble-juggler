@@ -85,12 +85,16 @@ jobs:
             exit 1
           fi
 
+      - id: pom-version
+        name: get-pom-version
+        uses: PERES-Richard/maven-get-version-action@v3.0.0
+
       - id: set-up-git-user
         if: success()
         name: Set up Git user
         run: |
-          git config --global user.name "H@JJ"
-          git config --global user.email "hajj@hajj.mozmail.com"
+          git config --global user.name "hajjoujti-bot"
+          git config --global user.email "bot@hajj.mozmail.com"
 
       - id: commit-changes
         if: success()
@@ -100,7 +104,7 @@ jobs:
         run: |
           git checkout master
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
-          git commit -S -am "Release ${VERSION}"
+          git commit -S -am "${{ steps.pom-version.outputs.version }}"
 
       - id: push-changes
         if: success()

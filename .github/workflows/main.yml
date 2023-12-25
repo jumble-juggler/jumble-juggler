@@ -85,10 +85,6 @@ jobs:
             exit 1
           fi
 
-      - id: pom-version
-        name: get-pom-version
-        uses: PERES-Richard/maven-get-version-action@v3.0.0
-
       - id: set-up-git-user
         if: success()
         name: Set up Git user
@@ -99,12 +95,12 @@ jobs:
       - id: commit-changes
         if: success()
         name: Commit Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git checkout master
+          # Get the project version
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          # Sign and commit with the version in the commit message
           git config --global user.signingkey ${{ secrets.OSSRH_GPG_KEY }}
-          git commit -S -am "${{ steps.pom-version.outputs.version }}"
+          git commit -S -am "v$VERSION"
 
       - id: push-changes
         if: success()

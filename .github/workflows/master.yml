@@ -93,6 +93,10 @@ jobs:
           branch: master
           unprotect_reviews: true
 
+      - run: |
+          # Get the project version and assign it to environment variable
+          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
       - id: upload-build-artifact
         name: Upload a Build Artifact
         if: github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'

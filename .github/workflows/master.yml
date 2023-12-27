@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-test-install:
+  build-test-install-increment-version:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -28,23 +28,9 @@ jobs:
         name: Build with Maven
         run: mvn clean install
 
-  increase-version:
-    if: github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs:
-      - build-test-install
-    permissions: write-all
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4.1.1
-      - name: Set up JDK
-        uses: actions/setup-java@v4.0.0
-        with:
-          java-version: "17"
-          distribution: "adopt"
-          cache: "maven"
-
       - id: import-gpg
         name: Import GPG
+        if: github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: crazy-max/ghaction-import-gpg@v6.0.0
         with:
           gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
@@ -54,7 +40,7 @@ jobs:
 
       - id: increment-version
         name: Determine Version and Increments it
-        if: success()
+        if: success() && github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
           # get the last commit message
           commit_message=$(git log -1 --pretty=%B)
@@ -82,14 +68,14 @@ jobs:
           fi
 
       - id: set-up-git-user
-        if: success()
+        if: success() && github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
         name: Set up Git user
         run: |
           git config --global user.name "hajjoujti-bot"
           git config --global user.email "bot@hajj.mozmail.com"
 
       - id: commit-changes
-        if: success()
+        if: success() && github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
         name: Commit Changes
         run: |
           # Get the project version
@@ -99,7 +85,7 @@ jobs:
           git commit -S -am "v$VERSION"
 
       - id: push-changes
-        if: success()
+        if: success() && github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
         name: Push to protected branch
         uses: CasperWA/push-protected@v2
         with:
@@ -109,6 +95,7 @@ jobs:
 
       - id: upload-build-artifact
         name: Upload a Build Artifact
+        if: github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: actions/upload-artifact@v4.0.0
         run: |
           # Get the project version and assign it to environment variable

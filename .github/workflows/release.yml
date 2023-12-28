@@ -27,14 +27,10 @@ jobs:
           passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
           git_user_signingkey: true
 
-      - id: package
-        name: Package the library
-        run: mvn clean install
-
       - id: publish-to-central
         name: Publish to Central Repository
         run: |
           mvn \
             --no-transfer-progress \
             --batch-mode \
-            deploy -DskipTests -X
+            deploy -X

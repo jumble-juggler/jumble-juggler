@@ -17,7 +17,15 @@ jobs:
           java-version: "17"
           distribution: "adopt"
           cache: "maven"
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
+
+      - id: import-gpg
+        name: Import GPG
+        uses: crazy-max/ghaction-import-gpg@v6.0.0
+        with:
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
 
       - id: mvn-verify
         if: success()
@@ -28,16 +36,6 @@ jobs:
         if: success()
         name: Build with Maven
         run: mvn clean install
-
-      - id: import-gpg
-        name: Import GPG
-        if: github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: crazy-max/ghaction-import-gpg@v6.0.0
-        with:
-          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
 
       - id: increment-version
         name: Determine Version and Increments it

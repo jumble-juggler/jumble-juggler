@@ -16,17 +16,15 @@ jobs:
           distribution: "adopt"
           cache: "maven"
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: OSSRH_USERNAME # env variable for username in deploy
-          server-password: OSSRH_TOKEN # env variable for token in deploy
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+          server-username: ${{ secrets.OSSRH_USERNAME }} # env variable for username in deploy
+          server-password: ${{ secrets.OSSRH_TOKEN }} # env variable for token in deploy
 
       - id: import-gpg-key
         name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v6.1.0
         env:
-          GPG_PRIVATE_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
 
       - id: package
         name: Package the library
@@ -34,10 +32,6 @@ jobs:
 
       - id: publish-to-central
         name: Publish to Central Repository
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
         run: |
           mvn \
             --no-transfer-progress \

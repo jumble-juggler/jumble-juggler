@@ -91,17 +91,3 @@ jobs:
           token: ${{ secrets.PUSH_TO_PROTECTED_BRANCH }}
           branch: master
           unprotect_reviews: true
-
-      - run: |
-          # Get the project version and assign it to environment variable
-          echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-
-      - id: upload-build-artifact
-        name: Upload a Build Artifact
-        if: github.actor != 'hajjoujti-bot' && github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: actions/upload-artifact@v4.0.0
-        env:
-          name: my-artifact
-        with:
-          name: ${{ env.name }}-${{ env.version }}
-          path: target/${{ env.name }}-${{ env.version }}.jar

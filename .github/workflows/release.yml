@@ -22,9 +22,10 @@ jobs:
       - id: import-gpg-key
         name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v6.1.0
-        env:
+        with:
           gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          git_user_signingkey: true
 
       - id: package
         name: Package the library

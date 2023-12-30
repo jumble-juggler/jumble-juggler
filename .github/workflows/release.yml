@@ -33,4 +33,4 @@ jobs:
           mvn \
             --no-transfer-progress \
             --batch-mode \
-            deploy -X
+            deploy

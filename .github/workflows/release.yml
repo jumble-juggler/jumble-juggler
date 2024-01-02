@@ -31,7 +31,9 @@ jobs:
 
       - id: package
         name: Package the library
-        run: mvn clean install
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+        run: mvn clean install -X
 
       - id: publish-to-central
         name: Publish to Central Repository

@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.jumblejuggler.exceptions.JumbleJugglerException;
-import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ class IntegerJugglerTest {
 
   @Test
   void testGenerateRandomIntSmallerThan() {
-    int random = ThreadLocalRandom.current().nextInt();
+    int random = IntegerJuggler.generateRandomInt();
 
     int result =
         Assertions.assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntSmallerThan(random));
@@ -40,7 +39,7 @@ class IntegerJugglerTest {
 
   @Test
   void testGenerateRandomIntGreaterThan() {
-    int random = ThreadLocalRandom.current().nextInt();
+    int random = IntegerJuggler.generateRandomInt();
 
     int result =
         Assertions.assertDoesNotThrow(() -> IntegerJuggler.generateRandomIntGreaterThan(random));
@@ -135,7 +134,7 @@ class IntegerJugglerTest {
 
   @Test
   void testGenerateRandomIntBetween_WhenMinGreaterThanMax_ThrowException() {
-    int random = ThreadLocalRandom.current().nextInt();
+    int random = IntegerJuggler.generateRandomInt();
     int min = IntegerJuggler.generateRandomIntSmallerThan(random);
     int max = IntegerJuggler.generateRandomIntGreaterThan(random);
 
@@ -146,7 +145,7 @@ class IntegerJugglerTest {
 
   @Test
   void testGenerateRandomIntBetween() {
-    int random = ThreadLocalRandom.current().nextInt();
+    int random = IntegerJuggler.generateRandomInt();
     int min = IntegerJuggler.generateRandomIntGreaterThan(random);
     int max = IntegerJuggler.generateRandomIntSmallerThan(random);
 

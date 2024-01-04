@@ -8,7 +8,6 @@ package io.github.jumblejuggler;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.github.jumblejuggler.exceptions.JumbleJugglerException;
-import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +27,7 @@ class DoubleJugglerTest {
 
   @Test
   void testGenerateRandomDoubleSmallerThan() {
-    double random = ThreadLocalRandom.current().nextDouble();
+    double random = DoubleJuggler.generateRandomDouble();
 
     double result = assertDoesNotThrow(() -> DoubleJuggler.generateRandomDoubleSmallerThan(random));
     assertTrue(result < random);
@@ -36,7 +35,7 @@ class DoubleJugglerTest {
 
   @Test
   void testGenerateRandomDoubleGreaterThan() {
-    double random = ThreadLocalRandom.current().nextDouble();
+    double random = DoubleJuggler.generateRandomDouble();
 
     double result = assertDoesNotThrow(() -> DoubleJuggler.generateRandomDoubleGreaterThan(random));
     assertTrue(result >= random);

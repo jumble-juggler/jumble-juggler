@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.jumblejuggler.exceptions.JumbleJugglerException;
-import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ class LongJugglerTest {
 
   @Test
   void testGenerateRandomLongSmallerThan() {
-    long random = ThreadLocalRandom.current().nextLong();
+    long random = LongJuggler.generateRandomLong();
 
     long result =
         Assertions.assertDoesNotThrow(() -> LongJuggler.generateRandomLongSmallerThan(random));
@@ -40,7 +39,7 @@ class LongJugglerTest {
 
   @Test
   void testGenerateRandomLongGreaterThan() {
-    long random = ThreadLocalRandom.current().nextLong();
+    long random = LongJuggler.generateRandomLong();
 
     long result =
         Assertions.assertDoesNotThrow(() -> LongJuggler.generateRandomLongGreaterThan(random));
@@ -137,7 +136,7 @@ class LongJugglerTest {
 
   @Test
   void testGenerateRandomLongBetween_WhenMinGreaterThanMax_ThrowException() {
-    long random = ThreadLocalRandom.current().nextLong();
+    long random = LongJuggler.generateRandomLong();
     long min = LongJuggler.generateRandomLongSmallerThan(random);
     long max = LongJuggler.generateRandomLongGreaterThan(random);
 
@@ -148,7 +147,7 @@ class LongJugglerTest {
 
   @Test
   void testGenerateRandomLongBetween() {
-    long random = ThreadLocalRandom.current().nextLong();
+    long random = LongJuggler.generateRandomLong();
     long min = LongJuggler.generateRandomLongGreaterThan(random);
     long max = LongJuggler.generateRandomLongSmallerThan(random);
 

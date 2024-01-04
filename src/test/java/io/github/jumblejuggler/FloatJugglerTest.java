@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.jumblejuggler.exceptions.JumbleJugglerException;
-import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ class FloatJugglerTest {
 
   @Test
   void testGenerateRandomFloatSmallerThan() {
-    float random = ThreadLocalRandom.current().nextFloat();
+    float random = FloatJuggler.generateRandomFloat();
 
     float result = assertDoesNotThrow(() -> FloatJuggler.generateRandomFloatSmallerThan(random));
     assertTrue(result < random);
@@ -39,7 +38,7 @@ class FloatJugglerTest {
 
   @Test
   void testGenerateRandomFloatGreaterThan() {
-    float random = ThreadLocalRandom.current().nextFloat();
+    float random = FloatJuggler.generateRandomFloat();
 
     float result = assertDoesNotThrow(() -> FloatJuggler.generateRandomFloatGreaterThan(random));
     assertTrue(result >= random);
